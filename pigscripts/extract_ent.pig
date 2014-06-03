@@ -5,17 +5,12 @@
 
 
 -- Set our input and output path as pig parameters
-%default INPUT_PATH '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
+-- %default INPUT_PATH '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
+%default INPUT_PATH '/Users/craig/Wattpad/Code_wattpad/similarity/entity_similarity/data_sample.pig'
 %default OUTPUT_PATH '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/out'
 
 
 
-
-
-
--- Set our input and output path as pig parameters
-%default INPUT_PATH 's3n://mortar-example-data/airline-data'
-%default OUTPUT_PATH 's3n://mortar-example-output-data/$MORTAR_EMAIL_S3_ESCAPED/airline-travel'
 
 -- Register the python functions we use in the pigscript
 REGISTER 'udfs/python/experiment.py' USING streaming_python AS exp;
