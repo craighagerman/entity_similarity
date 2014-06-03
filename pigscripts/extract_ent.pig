@@ -13,18 +13,23 @@
 
 
 -- Register the python functions we use in the pigscript
-REGISTER 'udfs/python/experiment.py' USING streaming_python AS exp;
-
+REGISTER '../udfs/python/experiment.py' USING streaming_python AS exp;
 
 
 
 input_data  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
     USING org.apache.pig.piggybank.storage.CSVExcelStorage(',') AS (
-        groupid:int, title:chararray, tag:chararray, desc:chararray
+        groupid:int, title:chararray, tag:chararray, descr:chararray
     );
 
 
-X = FOREACH input_data GENERATE exp.printlen((title, tag, desc);
+-- DUMP input_data;
+
+X = FOREACH input_data GENERATE exp.printlen(descr) AS len_fields;
+
+
+
+
 
 
 
