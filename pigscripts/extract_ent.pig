@@ -14,22 +14,38 @@
 
 -- Register the python functions we use in the pigscript
 REGISTER '../udfs/python/experiment.py' USING streaming_python AS exp;
+--REGISTER '../udfs/python/SampleLib.py' USING jython AS myfuncs;
 
 
 
 input_data  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
     USING org.apache.pig.piggybank.storage.CSVExcelStorage(',') AS (
-        groupid:int, title:chararray, tag:chararray, descr:chararray
-    );
+       groupid:int, title:chararray, tag:chararray, descr:chararray
+   );
 
 
+-- input_data  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
+--     USING org.apache.pig.piggybank.storage.CSVExcelStorage(',') AS (
+--         groupid:int
+--     );
 -- DUMP input_data;
+DESCRIBE input_data;
+data_lim = LIMIT input_data 10;
+DUMP data_lim;
 
-X = FOREACH input_data GENERATE exp.printlen(descr) AS len_fields;
+-- X = FOREACH input_data GENERATE exp.helloworld();
+X = FOREACH input_data GENERATE exp.square(groupid);
+
+DESCRIBE X;	
 
 
 
 
+
+
+-- b = foreach input_data generate myfuncs.helloworld(), myfuncs.square(groupid);
+-- DESCRIBE b
+-- DUMP b
 
 
 
