@@ -1,7 +1,7 @@
 -- load_metadata
 
 -- USAGE:
---		mortar local:run pigscripts/load_metadata.pig
+--		 mortar local:run pigscripts/extract_ent.pig
 
 
 -- Set our input and output path as pig parameters
@@ -10,54 +10,60 @@
 %default OUTPUT_PATH '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/out'
 
 
-
-
--- Register the python functions we use in the pigscript
-REGISTER '../udfs/python/experiment.py' USING streaming_python AS exp;
---REGISTER '../udfs/python/SampleLib.py' USING jython AS myfuncs;
+REGISTER '../udfs/python/experiment.py' USING streaming_python AS nasa_logs;
+REGISTER '../udfs/python/extract_ent.py' USING streaming_python as ent_ext;
 
 
 
-input_data  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
+
+
+-- load training data
+
+X  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
     USING org.apache.pig.piggybank.storage.CSVExcelStorage(',') AS (
        groupid:int, title:chararray, tag:chararray, descr:chararray
    );
 
 
--- input_data  = LOAD '/Users/craig/Wattpad/Code_wattpad/data/representative_metadata/fiction_train.csv'
---     USING org.apache.pig.piggybank.storage.CSVExcelStorage(',') AS (
---         groupid:int
---     );
--- DUMP input_data;
-DESCRIBE input_data;
-data_lim = LIMIT input_data 10;
-DUMP data_lim;
 
--- X = FOREACH input_data GENERATE exp.helloworld();
-X = FOREACH input_data GENERATE exp.square(groupid);
-
-DESCRIBE X;	
+-- concat title, tags, description from X
+entities = FOREACH X generate ent_ext.extract_ent(title, tag, descr);
 
 
 
 
 
 
--- b = foreach input_data generate myfuncs.helloworld(), myfuncs.square(groupid);
--- DESCRIBE b
--- DUMP b
+-- load collocation list
 
 
 
-  
--- LIMIT 
--- data_limit = LIMIT input_data 10;
--- GROUPBY
--- data_grp = GROUP  input_data BY groupid
--- DESCRIBE data_grp
--- FOREACH ... GENERATE
--- groupid_sum = FOREACH data_grp GENERATE group as title, SUM(input_data.groupid) as gid_count;
 
--- DUMP gid_sum;
+-- DESCRIBE X;
+-- data_lim = LIMIT X 10;
+-- -- DUMP data_lim;
+
+-- -- X = FOREACH X GENERATE exp.helloworld();
+-- groups = FOREACH X GENERATE ent_ext.helloworld(tag);
+
+-- DESCRIBE groups; 
+-- group_lim = LIMIT groups 10;
+-- DUMP group_lim;
+
+-- --------------------------------------------------------------------
+
+
+
+
+
+-- save gensim corpus
+
+
+-- save gensim dictionary
+
+
+-- save lsi language model
+
+
 
 
